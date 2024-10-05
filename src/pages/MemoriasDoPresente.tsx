@@ -3,14 +3,15 @@ import { Button, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View }
 import { CameraView, CameraType } from 'expo-camera'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useState, useRef } from 'react';
+import { NavigationProp } from '@react-navigation/native';
 
-export default function MemoriasDoPresente() {
+export default function MemoriasDoPresente({navigation}: {navigation: NavigationProp<any>}) {
 
   const [typeCamera, setTypeCamera] = useState<CameraType>('front')
   const [myPhoto, setMyPhoto] = useState('')
 
   const cameraRef = useRef<CameraView>()
-
+  
   function flipCamera() {
     if (typeCamera === "front") {
       setTypeCamera('back')
@@ -34,12 +35,17 @@ export default function MemoriasDoPresente() {
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
 
+      <Button  title="Navegar" onPress={() => navigation.navigate("MemoriasDoPassado", {mensagem: 'OlaMundo'})} />
+
       {
         myPhoto === '' ?
           <CameraView
             style={styles.camera}
             facing={typeCamera}
             ref={cameraRef}
+            onLayout={() => {
+              console.log("ready")
+            }}
           >
             <View style={styles.footerCameraContainer}>
 
@@ -62,7 +68,7 @@ export default function MemoriasDoPresente() {
 
           </CameraView>
           : <View>
-            <Image source={{ uri: myPhoto }} style={{width: '100%', height: '80%'}} />
+            <Image source={{ uri: myPhoto }} style={{ width: '100%', height: '80%' }} />
             <Button title='Resetar' onPress={() => setMyPhoto('')} />
           </View>
       }
